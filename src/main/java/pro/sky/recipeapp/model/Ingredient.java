@@ -8,10 +8,9 @@ import lombok.Data;
 public class Ingredient {
     private String name;
     private int count;
-    private String unitMeasure;
-
+    private String measureUnit;
     @Override
     public String toString() {
-        return name+", кол-во: "+count+", ед. изм.: "+unitMeasure;
+        return name+", кол-во: "+count+", ед. изм.: "+measureUnit;
     }
 }
