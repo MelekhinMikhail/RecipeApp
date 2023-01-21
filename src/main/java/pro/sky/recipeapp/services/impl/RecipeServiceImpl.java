@@ -11,7 +11,7 @@ import java.util.*;
 public class RecipeServiceImpl implements RecipeService {
     private static long count = 0;
 
-    public static Map<Long, Recipe> storage = new TreeMap<>();
+    private static Map<Long, Recipe> storage = new TreeMap<>();
 
     @Override
     public void addRecipe(Recipe recipe) {
@@ -22,23 +22,18 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public Recipe getRecipe(long id) {
-        return storage.getOrDefault(id, null);
+        return storage.get(id);
     }
 
     @Override
     public boolean deleteRecipeById(long id) {
-        if (storage.containsKey(id)) {
-            storage.remove(id);
-            return true;
-        } else {
-            return false;
-        }
+        var removed = storage.remove(id);
+        return removed != null;
     }
 
     @Override
     public boolean editRecipe(long id, Recipe recipe) {
         if (storage.containsKey(id)) {
-            storage.remove(id);
             storage.put(id, recipe);
             return true;
         } else {
@@ -48,37 +43,26 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public void deleteAllRecipes() {
-        storage = new TreeMap<>();
+        storage.clear();
     }
 
     @Override
     public List<Recipe> getAllRecipes() {
         if (storage.size() == 0) {
-            return null;
+            return Collections.emptyList();
         }
-        List<Recipe> list = new LinkedList<>();
-        for (Map.Entry<Long, Recipe> entry : storage.entrySet()) {
-            list.add(entry.getValue());
-        }
-        return list;
+        return new LinkedList<>(storage.values());
     }
 
     @Override
     public List<Recipe> getRecipesByIngredient(Ingredient ingredient) {
-        if (storage.size() == 0) {
-            return null;
-        }
         List<Recipe> list = new LinkedList<>();
         for (Recipe recipe : storage.values()) {
             if (recipe.getIngredients().contains(ingredient)) {
                 list.add(recipe);
             }
         }
-        if (list.size() != 0) {
-            return list;
-        } else {
-            return null;
-        }
+        return list;
     }
 
     @Override

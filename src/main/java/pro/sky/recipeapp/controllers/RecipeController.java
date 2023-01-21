@@ -60,7 +60,7 @@ public class RecipeController {
     @GetMapping("/")
     public ResponseEntity<List<Recipe>> getAll() {
         List<Recipe> list = recipeService.getAllRecipes();
-        if (list == null) {
+        if (list.size() == 0) {
             return ResponseEntity.noContent().build();
         } else {
             return ResponseEntity.ok(list);
@@ -70,7 +70,7 @@ public class RecipeController {
     @PostMapping("/ingredient")
     public ResponseEntity<List<Recipe>> getRecipesByIngredient(@RequestBody Ingredient ingredient) {
         List<Recipe> list = recipeService.getRecipesByIngredient(ingredient);
-        if (list == null) {
+        if (list.size() == 0) {
             return ResponseEntity.notFound().build();
         } else {
             return ResponseEntity.ok(list);
