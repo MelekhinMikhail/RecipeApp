@@ -1,26 +1,22 @@
 package pro.sky.recipeapp.model;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.util.LinkedList;
 import java.util.TreeMap;
 
 @Data
+@Schema(description = "Сущность рецепта")
 public class Recipe {
+    @Schema(description = "Имя")
     private String name;
+    @Schema(description = "Время готовки")
     private int cookingTime;
+    @Schema(description = "Ингредиенты")
     private LinkedList<Ingredient> ingredients;
+    @Schema(description = "Шаги приготовления")
     private TreeMap<Integer, String> steps;
-
-    public Recipe(String name, int cookingTime) {
-        if (name == null || name.isEmpty() || name.isBlank() || cookingTime <= 0) {
-            throw new IllegalArgumentException();
-        }
-        this.name = name;
-        this.cookingTime = cookingTime;
-        ingredients = new LinkedList<>();
-        steps = new TreeMap<>();
-    }
 
     @Override
     public String toString() {
