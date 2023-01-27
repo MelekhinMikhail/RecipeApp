@@ -114,7 +114,7 @@ public class RecipeController {
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Все рецепты успешно добавлены"
+                    description = "Все рецепты успешно удалены"
             )
     })
     @DeleteMapping("/")

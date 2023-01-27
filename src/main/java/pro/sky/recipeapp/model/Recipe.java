@@ -2,12 +2,14 @@ package pro.sky.recipeapp.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.LinkedList;
 import java.util.TreeMap;
 
 @Data
 @Schema(description = "Сущность рецепта")
+@NoArgsConstructor
 public class Recipe {
     @Schema(description = "Имя")
     private String name;
