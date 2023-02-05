@@ -1,0 +1,52 @@
+{
+  "3": {
+    "0": {
+      "name": "Пельмени",
+      "cookingTime": 20,
+      "ingredients": [
+        {
+          "name": "пельмень",
+          "count": 20,
+          "measureUnit": "шт."
+        }
+      ],
+      "steps": {
+        "1": "string1",
+        "2": "string2",
+        "3": "string3"
+      }
+    },
+    "1": {
+      "name": "Салат летний",
+      "cookingTime": 20,
+      "ingredients": [
+        {
+          "name": "пельмень",
+          "count": 20,
+          "measureUnit": "шт."
+        }
+      ],
+      "steps": {
+        "1": "string1",
+        "2": "string2",
+        "3": "string3"
+      }
+    },
+    "2": {
+      "name": "Салат зимний",
+      "cookingTime": 20,
+      "ingredients": [
+        {
+          "name": "пельмень",
+          "count": 20,
+          "measureUnit": "шт."
+        }
+      ],
+      "steps": {
+        "1": "string1",
+        "2": "string2",
+        "3": "string3"
+      }
+    }
+  }
+}
