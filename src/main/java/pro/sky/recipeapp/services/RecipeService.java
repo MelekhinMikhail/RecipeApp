@@ -3,6 +3,7 @@ package pro.sky.recipeapp.services;
 import pro.sky.recipeapp.model.Ingredient;
 import pro.sky.recipeapp.model.Recipe;
 
+import java.nio.file.Path;
 import java.util.List;
 
 public interface RecipeService {
@@ -22,4 +23,6 @@ public interface RecipeService {
     List<Recipe> getRecipesByIngredient(Ingredient ingredient);
 
     Recipe getRecipeByIngredients(List<Ingredient> list);
+
+    Path createAllRecipesFile();
 }

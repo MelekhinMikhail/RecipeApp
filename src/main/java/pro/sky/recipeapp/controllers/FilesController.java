@@ -30,7 +30,7 @@ public class FilesController {
             description = "Эта операция позволяет скачать JSON-файл со всеми рецептами."
     )
     @GetMapping("/export-recipes")
-    public ResponseEntity<InputStreamResource> downloadRecipesFile() throws FileNotFoundException {
+    public ResponseEntity<InputStreamResource> downloadRecipesJSONFile() throws FileNotFoundException {
         File file = filesService.getRecipesFile();
         if (file.exists()) {
             InputStreamResource resource = new InputStreamResource(new FileInputStream(file));

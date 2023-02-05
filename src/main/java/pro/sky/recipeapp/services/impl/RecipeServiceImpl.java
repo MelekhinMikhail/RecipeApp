@@ -10,13 +10,19 @@ import pro.sky.recipeapp.services.FilesService;
 import pro.sky.recipeapp.services.RecipeService;
 
 import javax.annotation.PostConstruct;
+import java.io.IOException;
+import java.io.Writer;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.*;
 
 @Service
 public class RecipeServiceImpl implements RecipeService {
     private static long count = 0;
     final private FilesService filesService;
-    private static Map<Long, Recipe> recipes = new TreeMap<>();
+    private static TreeMap<Long, Recipe> recipes = new TreeMap<>();
+    private Map<Long, TreeMap<Long, Recipe>> fileStorage = new TreeMap<>();
 
     public RecipeServiceImpl(FilesService filesService) {
         this.filesService = filesService;
@@ -106,7 +112,9 @@ public class RecipeServiceImpl implements RecipeService {
     }
     private void saveToRecipesFile() {
         try {
-            String json = new ObjectMapper().writeValueAsString(recipes);
+            fileStorage.clear();
+            fileStorage.put(count, recipes);
+            String json = new ObjectMapper().writeValueAsString(fileStorage);
             filesService.saveToRecipesFile(json);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
@@ -125,12 +133,37 @@ public class RecipeServiceImpl implements RecipeService {
     private void readFromRecipesFile() {
         try {
             String json = filesService.readFromRecipesFile();
-            recipes = new ObjectMapper().readValue(json, new TypeReference<TreeMap<Long, Recipe>>() {
+            fileStorage = new ObjectMapper().readValue(json, new TypeReference<TreeMap<Long, TreeMap<Long, Recipe>>>() {
             });
+            for (Map.Entry<Long, TreeMap<Long, Recipe>> entry : fileStorage.entrySet()) {
+                count = entry.getKey();
+                recipes = entry.getValue();
+            }
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
     }
 
-
+    @Override
+    public Path createAllRecipesFile() {
+        Path path = filesService.createTempFile("allRecipes");
+        for (Recipe recipe : recipes.values()) {
+            try (Writer writer = Files.newBufferedWriter(path, StandardOpenOption.APPEND)) {
+                writer.append(recipe.getName()+"\n");
+                writer.append("Время приготовления: " + recipe.getCookingTime() + " минут.\n");
+                writer.append("Ингредиенты:\n");
+                for (Ingredient ingredient : recipe.getIngredients()) {
+                    writer.append(" - " + ingredient.getName() + " ~ " + (ingredient.getCount() == 0 ? "" : ingredient.getCount()+" ") + ingredient.getMeasureUnit() + "\n");
+                }
+                writer.append("Инструкция приготовления:\n");
+                for (Map.Entry<Integer, String> entry : recipe.getSteps().entrySet()) {
+                    writer.append(entry.getKey() + ". " + entry.getValue() + "\n");
+                }
+                writer.append("\n");
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return path;
+    }
 }

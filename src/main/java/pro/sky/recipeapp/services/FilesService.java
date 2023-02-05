@@ -1,6 +1,7 @@
 package pro.sky.recipeapp.services;
 
 import java.io.File;
+import java.nio.file.Path;
 
 public interface FilesService {
     boolean saveToRecipesFile(String json);
@@ -18,4 +19,6 @@ public interface FilesService {
     File getRecipesFile();
 
     File getIngredientsFile();
+
+    Path createTempFile(String suffix);
 }

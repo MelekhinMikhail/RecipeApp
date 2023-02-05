@@ -6,12 +6,19 @@ import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pro.sky.recipeapp.model.Ingredient;
 import pro.sky.recipeapp.model.Recipe;
 import pro.sky.recipeapp.services.RecipeService;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 
 @RestController
@@ -180,6 +187,29 @@ public class RecipeController {
             return ResponseEntity.notFound().build();
         } else {
             return ResponseEntity.ok(recipe);
+        }
+    }
+
+    @Operation(
+            summary = "Скачать файл со всеми рецептами.",
+            description = "Эта операция позволяет скачать TXT-файл со всеми рецептами."
+    )
+    @GetMapping("/download")
+    public ResponseEntity<Object> downloadAllRecipesTXTFile() {
+        try {
+            Path path = recipeService.createAllRecipesFile();
+            if (Files.size(path) == 0) {
+                return ResponseEntity.noContent().build();
+            }
+            InputStreamResource resource = new InputStreamResource(new FileInputStream(path.toFile()));
+            return ResponseEntity.ok()
+                    .contentType(MediaType.TEXT_PLAIN)
+                    .contentLength(Files.size(path))
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"AllRecipes.txt\"")
+                    .body(resource);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().body(e.toString());
         }
     }
 }
